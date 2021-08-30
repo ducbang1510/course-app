@@ -16,6 +16,7 @@ import Logout from './Logout';
 // import { useDispatch } from 'react-redux';
 
 export let UserContext = React.createContext()
+
 export default function App(props) {
   // const [user, setUser] = useState(null)
   // const dispatch = useDispatch()
@@ -47,7 +48,6 @@ export default function App(props) {
 
   //   setUser(user)
   // }
-
   return (
     // <UserContext.Provider value={{ user, login }}>
       <BrowserRouter>

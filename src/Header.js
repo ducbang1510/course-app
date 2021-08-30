@@ -18,7 +18,6 @@ export default function Header() {
 
     useEffect(() =>{
         API.get(endpoints['categories']).then(res => {
-            console.info(res.data)
             setCategories(res.data)
         })
     })
