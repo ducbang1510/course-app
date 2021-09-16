@@ -28,7 +28,6 @@ export default function Login(props) {
           'password': password,
           'grant_type': 'password'
         });
-        console.log(res.data);
     
         cookies.save("access_token", res.data.access_token);
     
@@ -37,7 +36,6 @@ export default function Login(props) {
             'Authorization': `Bearer ${cookies.load('access_token')}`
           }
         })
-        console.info(user.data);
         cookies.save("user", user.data)
     
         dispatch({

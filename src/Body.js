@@ -1,64 +1,23 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import API, { endpoints } from './API';
 import { Link, useLocation } from 'react-router-dom'
 import { Row, Col, Card, Pagination } from 'react-bootstrap'
-
-// export default class Body extends React.Component {
-//     constructor() {
-//         super()
-//         this.state = {
-//             'courses': [],
-//             'count': 0
-//         }
-//     }
-
-//     loadCourse= (page="?page1") => {
-//         API.get(`${endpoints['courses']}${page}`).then(res => {
-//             console.info(res.data)
-//             this.setState({
-//                 'courses': res.data.results,
-//                 'count': res.data.count
-//             })
-//         })
-//     }
-
-//     componentDidMount() {
-//         this.loadCourse()
-//     }
-
-//     componentDidUpdate() {
-//         console.log(this.props.location.search)
-//         this.loadCourse(this.props.location.search)
-//     }
-
-//     render() {
-//         let items = []
-//         for(let i = 0; i < Math.ceil(this.state.count/3); i++)
-//             items.push(
-//                 <Pagination.Item><Link to={"/?page=" + (i + 1)}>{i + 1}</Link></Pagination.Item>
-//             )
-
-//         return (
-//             <>
-//                 <h1 class="text-center text-danger">Các khóa học trực tuyến</h1>
-//                 <Pagination>
-//                     {items}
-//                 </Pagination>
-//                 <Row>
-//                     {this.state.courses.map(c => <ACourse course={c} />)}
-//                 </Row>
-//             </>
-//         )
-//     }
-// }
+import { SearchContext } from './App';
+// import { SearchContext } from './Header'
 
 export default function Body() {
     const [courses, setCourses] = useState([])
     const [count, setCount] = useState(0)
 
-    const loadCourse= (page="?page1") => {
+    const auth1 = useContext(SearchContext)
+    let searchData = auth1.searchData
+
+    // const searchData = React.useContext(SearchContext)
+    // console.info(searchData)
+    
+
+    const loadCourse= (page="?page=1") => {
         API.get(`${endpoints['courses']}${page}`).then(res => {
-            console.info(res.data)
             setCourses(res.data.results)
             setCount(res.data.count)
         })
@@ -71,14 +30,30 @@ export default function Body() {
     let location = useLocation()
     useEffect(() => {
         loadCourse(location.search)
-    }, [location.search])
+    }, [location])
 
     
     let items = []
-    for(let i = 0; i < Math.ceil(count/3); i++)
+    for(let i = 0; i < Math.ceil(count/6); i++)
         items.push(
             <Pagination.Item><Link to={"/?page=" + (i + 1)}>{i + 1}</Link></Pagination.Item>
         )
+
+    let r = <></>
+
+    if (searchData != null) {
+        r = <>
+            <Row>
+                {searchData.map(c => <ACourse course={c} />)}
+            </Row>
+        </>
+    } else {
+        r = <>
+            <Row>
+                {courses.map(c => <ACourse course={c} />)}
+            </Row>
+        </>
+    }
 
     return (
         <>
@@ -86,9 +61,7 @@ export default function Body() {
             <Pagination>
                 {items}
             </Pagination>
-            <Row>
-                {courses.map(c => <ACourse course={c} />)}
-            </Row>
+            {r}
         </>
     )
     

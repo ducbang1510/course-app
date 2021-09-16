@@ -11,13 +11,22 @@ import Login from './Login';
 import { Container } from 'react-bootstrap'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Logout from './Logout';
+import API, { endpoints } from './API';
 // import API, { endpoints } from './API';
 // import cookies from 'react-cookies';
 // import { useDispatch } from 'react-redux';
 
-export let UserContext = React.createContext()
+// export let UserContext = React.createContext()
+export let SearchContext = React.createContext()
 
 export default function App(props) {
+  const [searchData, setSearchData] = React.useState([])
+
+  const search = (searchKey) => {
+    API.get(`${endpoints['courses']}${searchKey}`).then(res => {
+      setSearchData(res.data.results)
+    })
+  }
   // const [user, setUser] = useState(null)
   // const dispatch = useDispatch()
 
@@ -49,7 +58,8 @@ export default function App(props) {
   //   setUser(user)
   // }
   return (
-    // <UserContext.Provider value={{ user, login }}>
+    // <SearchContext.Provider value={{ user, login }}>
+    <SearchContext.Provider value={{searchData, search}}>
       <BrowserRouter>
         <Container>
           <Header />
@@ -63,6 +73,7 @@ export default function App(props) {
           </Switch>
         </Container>
       </BrowserRouter>
-    // </UserContext.Provider>
+    </SearchContext.Provider>
+    // </SearchContext.Provider>
   )
 }
